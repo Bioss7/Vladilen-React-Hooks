@@ -1,29 +1,22 @@
-import React, {useState, useCallback} from "react";
-import ItemsList from "./itemsList";
+import React, {useState} from "react";
+import Alert from "./Alert";
+import Main from "./Main";
 
-// useCallback - (для генераци элементов в другой компонент) нужна чтобы функция не изменялась при новом рендере 
+export const AlertContext = React.createContext()
+
 
 function App() {
-    const [colored, setColored] = useState(false);
-    const [count, setCount] = useState(1);
+    const [alert, setAlert] = useState(false);
 
-    const styles = {
-        color: colored ? 'darkred' : 'black'
-    }
-
-    // закешировали с помощью useCallback
-    const generateItemsFromAPI = useCallback((indexNumber) => {
-        return new Array(count).fill('').map((_, i) => `Элемент ${i + indexNumber}`);
-    }, [count]);
+    const toggleAlert = () => setAlert(prev => !prev);
     
     return (
-        <div>
-            <h1 style={styles}>Количесвто элементов: {count}</h1>
-            <button className={'btn btn-success'} onClick={() => setCount(prev => prev + 1)}>Добавить</button>
-            <button className={'btn btn-warning'} onClick={() => setColored(prev => !prev)}>Изменить</button>
-
-            <ItemsList getItems={generateItemsFromAPI} />
-        </div>
+        <AlertContext.Provider value={alert}>
+            <div className={'container pt-3'}>
+                <Alert />
+                <Main toggle={toggleAlert}/>
+            </div>
+        </AlertContext.Provider>
     )
 
 }
