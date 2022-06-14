@@ -14,25 +14,27 @@ function useInput(initialValue) {
         setValue(event.target.value)
     }
 
+    const clear = () => setValue('');
+
     return {
-        value, onChange
+        bind: {value, onChange}, 
+        value,
+        clear
     }
 }
 
 function App() {
-    const [name, setName] = useState('');
+    const input = useInput('')
+    const lastName = useInput('')
 
-    const changeHandler = event => {
-        setName(event.target.value)
-    }
-
-    useLogger(name);
+    useLogger(input.value);
 
     return (
         <div className={'container pt-3'}>
-            <input type="text" value={name} onChange={changeHandler} />
+            <input type="text" {...input.bind} />
+            <button className="btn btn-warning" onClick={() => input.clear()}>Очистить</button>
             <hr />
-            <h1>{name}</h1>
+            <h1>{input.value} {lastName.value}</h1>
         </div>
     )
 
